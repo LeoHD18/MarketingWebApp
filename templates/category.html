@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ category_name }}</title>
+  <link
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    rel="stylesheet">
+</head>
+<body class="bg-light">
+  <div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="mb-0">{{ category_name }}</h1>
+
+      {# Show “Create New Listing” only to logged-in users #}
+      {% if session.user_id %}
+        <a href="{{ url_for('create_listing', category_id=request.view_args.category_id) }}"
+           class="btn btn-primary">
+          <i class="fas fa-plus-circle"></i> Create New Listing
+        </a>
+
+        <a href="{{ url_for('logout') }}" class="btn btn-outline-secondary">
+            Sign Out
+        </a>
+      {% endif %}
+    </div>
+
+
+    <div class="row">
+      {% for item in listings %}
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          {# show image first #}
+          {% if item.image_url %}
+          <img src="{{ item.image_url }}" class="card-img-top" alt="Listing image">
+          {% endif %}
+          <div class="card-body">
+            {# loop every field except id, category_id and the image_url itself #}
+            {% for key, value in item.items() %}
+              {% if key not in ['id','category_id','image_url'] %}
+                <p class="mb-1">
+                  <strong>{{ key|replace('_',' ')|capitalize }}:</strong>
+                  {{ value }}
+                </p>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <p class="text-muted">No listings found in this category.</p>
+      {% endfor %}
+    </div>
+
+  </div>
+</body>
+</html>

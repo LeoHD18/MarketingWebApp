@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html><body>
+  <h1>New {{ category }} Listing</h1>
+  <form method="post" enctype="multipart/form-data">
+    <label>Image <input type="file" name="image" accept="image/*" required></label><br>
+    {% for col in columns %}
+      <label>{{ col.replace('_',' ').title() }} <input name="{{ col }}" required></label><br>
+    {% endfor %}
+    <button type="submit">Submit</button>
+  </form>
+</body></html>

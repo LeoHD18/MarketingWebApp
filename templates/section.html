@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html><body>
+  <h1>Categories</h1>
+  <ul>
+    {% for id,name in categories %}
+      <li><a href="{{ url_for('category', category_id=id) }}">{{ name }}</a></li>
+    {% endfor %}
+  </ul>
+</body></html>
