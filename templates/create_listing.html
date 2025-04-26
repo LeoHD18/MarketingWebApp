@@ -50,7 +50,7 @@
                     <option value="1">Yes</option>
                     <option value="0">No</option>
                   </select>
-                {% elif col.name == 'phone_number' %}
+                {% elif col.name == 'phone_number' or col.name == 'emergency_contact' %}
                   <input type="tel" id="{{ col.name }}" name="{{ col.name }}" class="form-control"
                          placeholder="123-456-7890" pattern="^\d{3}-\d{3}-\d{4}$" title="Format: 123-456-7890" required>
                 {% else %}
