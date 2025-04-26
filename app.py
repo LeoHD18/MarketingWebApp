@@ -46,7 +46,8 @@ def section(section_id):
 @app.route('/category/<int:category_id>')
 def category(category_id):
     conn = get_db(); cur = conn.cursor(dictionary=True)
-    cur.execute("SELECT name FROM Categories WHERE id=%s", (category_id,))
+    # grab the category name AND its section_id
+    cur.execute("SELECT name, section_id FROM Categories WHERE id=%s", (category_id,))
     cat = cur.fetchone()
     table = cat['name'].lower().replace(' ', '_')
     cur.execute(f"SELECT * FROM {table} WHERE category_id=%s", (category_id,))
@@ -56,7 +57,7 @@ def category(category_id):
         blob = storage_client.bucket(GCS_BUCKET).blob(row['image_url'])
         row['image_url'] = blob.generate_signed_url(version='v4', expiration=3600, method='GET')
     cur.close(); conn.close()
-    return render_template('category.html', category=cat['name'], listings=rows)
+    return render_template('category.html', category=cat['name'], listings=rows, section_id=cat['section_id'])
 
 @app.route('/create/<int:category_id>', methods=['GET', 'POST'])
 def create_listing(category_id):
@@ -92,9 +93,14 @@ def create_listing(category_id):
 
     # GET: render form
     cur.execute(f"SHOW COLUMNS FROM {table}")
-    columns = [col[0] for col in cur.fetchall() if col[0] not in ('id','category_id','image_url')]
-    cur.close(); conn.close()
-    return render_template('create_listing.html', category=cat_name, columns=columns)
+    raw_cols = cur.fetchall()  
+# raw_cols is a list of tuples: (Field, Type, Null, Key, Default, Extra)
+    columns = [
+        {"name": row[0], "type": row[1]} 
+        for row in raw_cols 
+        if row[0] not in ('id','category_id','image_url')
+    ]
+    return render_template('create_listing.html', category=cat_name, columns=columns )
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():

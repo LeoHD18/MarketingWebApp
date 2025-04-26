@@ -1,11 +1,48 @@
 <!DOCTYPE html>
-<html><body>
+<html>
+  <link
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+  rel="stylesheet">
+  <body>
   <h1>New {{ category }} Listing</h1>
   <form method="post" enctype="multipart/form-data">
     <label>Image <input type="file" name="image" accept="image/*" required></label><br>
     {% for col in columns %}
-      <label>{{ col.replace('_',' ').title() }} <input name="{{ col }}" required></label><br>
-    {% endfor %}
+  <label>
+    {{ col.name.replace('_',' ').title() }}
+    {% set typename = col.type.lower() %}
+    {% if 'date' in typename %}
+      <!-- HTML5 date picker -->
+      <input 
+        type="date" 
+        name="{{ col.name }}" 
+        required
+        title="Use format YYYY-MM-DD">
+    {% elif 'time' in typename %}
+      <!-- HTML5 time picker -->
+      <input
+        type="time"
+        name="{{ col.name }}"
+        required
+        title="Use format HH:MM">
+    {% elif col.name == 'phone_number' %}
+      <!-- phone number -->
+      <input
+        type="tel"
+        name="{{ col.name }}"
+        required
+        placeholder="123-456-7890"
+        pattern="^\d{3}-\d{3}-\d{4}$"
+        title="Format: 123-456-7890">
+    {% else %}
+      <!-- fallback to text -->
+      <input
+        type="text"
+        name="{{ col.name }}"
+        required>
+    {% endif %}
+  </label><br>
+{% endfor %}
     <button type="submit">Submit</button>
   </form>
 </body></html>

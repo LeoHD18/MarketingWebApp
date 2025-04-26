@@ -2,8 +2,22 @@
 <html><body>
   <h1>Categories</h1>
   <ul>
+
+    <link
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    rel="stylesheet">
+
+    <div class="mb-4">
+      <a href="{{ url_for('index') }}"
+         class="btn btn-secondary">
+        Back
+      </a>
+    </div>
+
     {% for id,name in categories %}
       <li><a href="{{ url_for('category', category_id=id) }}">{{ name }}</a></li>
     {% endfor %}
+
+  
   </ul>
 </body></html>
