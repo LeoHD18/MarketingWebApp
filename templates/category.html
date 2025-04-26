@@ -2,63 +2,74 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>{{ category_name }}</title>
-  <link
-    href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ category_name }} - Marketing App for Ames</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="bg-light">
-  <div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h1 class="mb-0">{{ category_name }}</h1>
+<body class="d-flex flex-column min-vh-100 bg-light">
 
-      {# Show “Create New Listing” only to logged-in users #}
-      {% if session.user_id %}
-        <a href="{{ url_for('create_listing', category_id=request.view_args.category_id) }}"
-           class="btn btn-primary">
-          <i class="fas fa-plus-circle"></i> Create New Listing
-        </a>
-
-
-        <a href="{{ url_for('logout') }}" class="btn btn-outline-secondary">
-            Sign Out
-        </a>
-      {% endif %}
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="{{ url_for('index') }}">Marketing App for Ames</a>
+      <div class="d-flex">
+        {% if session.user_id %}
+          <a href="{{ url_for('logout') }}" class="btn btn-outline-secondary me-2">Sign Out</a>
+        {% else %}
+          <a href="{{ url_for('login') }}" class="btn btn-outline-primary me-2">Login</a>
+          <a href="{{ url_for('register') }}" class="btn btn-primary">Register</a>
+        {% endif %}
+      </div>
     </div>
+  </nav>
 
-    <div class="mb-4">
-      <a href="{{ url_for('section', section_id=section_id) }}"
-         class="btn btn-secondary">
-        ← Back to Section
-      </a>
-    </div>
-
-    <div class="row">
-      {% for item in listings %}
-      <div class="col-md-4 mb-4">
-        <div class="card h-100">
-          {# show image first #}
-          {% if item.image_url %}
-          <img src="{{ item.image_url }}" class="card-img-top" alt="Listing image">
+  <main class="flex-fill">
+    <div class="container py-4">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="display-5">{{ category_name }}</h1>
+        <div>
+          {% if session.user_id %}
+            <a href="{{ url_for('create_listing', category_id=request.view_args.category_id) }}" class="btn btn-primary me-2">
+              <i class="fas fa-plus-circle"></i> New Listing
+            </a>
           {% endif %}
-          <div class="card-body">
-            {# loop every field except id, category_id and the image_url itself #}
-            {% for key, value in item.items() %}
-              {% if key not in ['id','category_id','image_url'] %}
-                <p class="mb-1">
-                  <strong>{{ key|replace('_',' ')|capitalize }}:</strong>
-                  {{ value }}
-                </p>
-              {% endif %}
-            {% endfor %}
-          </div>
+          <a href="{{ url_for('section', section_id=section_id) }}" class="btn btn-secondary">← Back</a>
         </div>
       </div>
-      {% else %}
-      <p class="text-muted">No listings found in this category.</p>
-      {% endfor %}
-    </div>
 
-  </div>
+      <div class="row">
+        {% for item in listings %}
+          <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+              {% if item.image_url %}
+                <img src="{{ item.image_url }}" class="card-img-top" alt="Listing image">
+              {% endif %}
+              <div class="card-body">
+                {% for key, value in item.items() %}
+                  {% if key not in ['id','category_id','image_url'] %}
+                    <p class="mb-1">
+                      <strong>{{ key.replace('_',' ').capitalize() }}:</strong>
+                      {% if value == 1 %}Yes{% elif value == 0 %}No{% else %}{{ value }}{% endif %}
+                    </p>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        {% else %}
+          <div class="col-12 text-center py-5">
+            <p class="text-muted">No listings found in this category.</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </main>
+
+  <footer class="bg-dark text-white text-center py-3">
+    <div class="container">
+      <small>&copy; {{ current_year }} Marketing App for Ames</small>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
