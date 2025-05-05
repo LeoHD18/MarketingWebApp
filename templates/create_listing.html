@@ -40,6 +40,7 @@
                   {{ col.name.replace('_', ' ').title() }}
                 </label>
                 {% set typename = col.type.lower() %}
+
                 {% if 'date' in typename %}
                   <input type="date" id="{{ col.name }}" name="{{ col.name }}" class="form-control" required title="YYYY-MM-DD">
                 {% elif 'time' in typename %}
@@ -50,9 +51,38 @@
                     <option value="1">Yes</option>
                     <option value="0">No</option>
                   </select>
-                {% elif col.name == 'phone_number' or col.name == 'emergency_contact' %}
+                {% elif col.name == 'currency' %}
+                  <input type="text" id="{{ col.name }}" name="{{ col.name }}" class="form-control" required maxlength="3"
+                         pattern="[A-Za-z]{3}" title="Enter a 3-letter currency code">
+                {% elif col.name in ['price', 'year_built', 'fee', 'capacity', 'reward', 'monthly_payment', 'bedrooms', 'bathrooms', 'spots_available', 'square_feet', 'lease_term_months', 'parking_spaces', 'duration_minutes', 'years_experience', 'max_children', 'warranty_months', 'salary_min', 'salary_max', 'rate_per_hour', 'rate_per_vent', 'rate_per_sqft', 'rate_per_walk', 'monthly_rent'] %}
+                  <input type="number" id="{{ col.name }}" name="{{ col.name }}" class="form-control" required step="1" min="0"
+                         title="Enter a whole number">
+                {% elif col.name == 'phone_number' %}
                   <input type="tel" id="{{ col.name }}" name="{{ col.name }}" class="form-control"
-                         placeholder="123-456-7890" pattern="^\d{3}-\d{3}-\d{4}$" title="Format: 123-456-7890" required>
+                         placeholder="123-456-7890" pattern="^\d{3}-\d{3}-\d{4}$" maxlength="20" title="Format: 123-456-7890" required>
+                {% elif col.name == 'emergency_contact' %}
+                  <input type="tel" id="{{ col.name }}" name="{{ col.name }}" class="form-control"
+                         placeholder="123-456-7890" pattern="^\d{3}-\d{3}-\d{4}$" maxlength="20" title="Format: 123-456-7890" required>
+                {% elif col.name == 'color' %}
+                  <input type="text" id="{{ col.name }}" name="{{ col.name }}" class="form-control" maxlength="30" required>
+                {% elif col.name == 'type' %}
+                  <input type="text" id="{{ col.name }}" name="{{ col.name }}" class="form-control" maxlength="50" required>
+                {% elif col.name == 'conditions' %}
+                  <input type="text" id="{{ col.name }}" name="{{ col.name }}" class="form-control" maxlength="30" required>
+                {% elif col.name == 'isbn' %}
+                  <input type="text" id="{{ col.name }}" name="{{ col.name }}" class="form-control" maxlength="20" required>
+                {% elif col.name == 'size' %}
+                  <input type="text" id="{{ col.name }}" name="{{ col.name }}" class="form-control" maxlength="20" required>
+                {% elif col.name == 'material' %}
+                  <input type="text" id="{{ col.name }}" name="{{ col.name }}" class="form-control" maxlength="50" required>
+                {% elif col.name == 'house_type' %}
+                  <input type="text" id="{{ col.name }}" name="{{ col.name }}" class="form-control" maxlength="50" required>
+                {% elif col.name == 'city' %}
+                  <input type="text" id="{{ col.name }}" name="{{ col.name }}" class="form-control" maxlength="50" required>
+                {% elif col.name == 'office_type' %}
+                  <input type="text" id="{{ col.name }}" name="{{ col.name }}" class="form-control" maxlength="50" required>
+                {% elif col.name == 'license_type' %}
+                  <input type="text" id="{{ col.name }}" name="{{ col.name }}" class="form-control" maxlength="50" required>
                 {% else %}
                   <input type="text" id="{{ col.name }}" name="{{ col.name }}" class="form-control" required>
                 {% endif %}
